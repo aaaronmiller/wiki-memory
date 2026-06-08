@@ -23,6 +23,25 @@
             "command": "cat ~/.local/share/ai-wiki/.meta/skills/*.md 2>/dev/null | head -40 || true",
             "timeout": 5,
             "description": "Inject auto-generated skill references"
+          },
+          {
+            "type": "command",
+            "command": "bash -lc 'root=\"${WIKI_MEMORY_ROOT:-$HOME/code/wiki-memory}\"; MEMORY_SOURCE=claude-code python3 \"$root/hooks/memory_hook.py\" session-start 2>/dev/null || true'",
+            "timeout": 8,
+            "description": "Recall atomic memories from prior sessions into context"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -lc 'root=\"${WIKI_MEMORY_ROOT:-$HOME/code/wiki-memory}\"; MEMORY_SOURCE=claude-code MEMORY_HOOK_STRUCTURED=1 python3 \"$root/hooks/memory_hook.py\" user-prompt 2>/dev/null || true'",
+            "timeout": 8,
+            "description": "Save explicit 'remember…' directives and surface relevant memories"
           }
         ]
       }
@@ -44,6 +63,12 @@
       {
         "matcher": "",
         "hooks": [
+          {
+            "type": "command",
+            "command": "bash -lc 'root=\"${WIKI_MEMORY_ROOT:-$HOME/code/wiki-memory}\"; MEMORY_SOURCE=claude-code python3 \"$root/hooks/memory_hook.py\" session-end 2>/dev/null || true'",
+            "timeout": 10,
+            "description": "Capture atomic memories from the session transcript"
+          },
           {
             "type": "command",
             "command": "bash -lc 'root=\"${WIKI_MEMORY_ROOT:-$HOME/code/wiki-memory}\"; python3 \"$root/dream/dream_agent.py\" --quiet 2>/dev/null' &",

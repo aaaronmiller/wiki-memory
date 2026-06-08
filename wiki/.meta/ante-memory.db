@@ -1,0 +1,29 @@
+[
+  {
+    "id": "mem-18b68b5e67752d12",
+    "content": "mcp wiki-memory smoke",
+    "tags": [
+      "mcp",
+      "audit"
+    ],
+    "project": "ante-preview",
+    "source": "unknown",
+    "pinned": false,
+    "created": "18b68b5e67752d12",
+    "accessed": "2026-06-06T20:26:59.947400+00:00",
+    "access_count": 1
+  },
+  {
+    "id": "mem-18b68b5e67c75017",
+    "content": "ante wiki-memory integration smoke",
+    "tags": [
+      "audit"
+    ],
+    "project": "ante-preview",
+    "source": "unknown",
+    "pinned": false,
+    "created": "18b68b5e67c75017",
+    "accessed": "2026-06-06T20:26:59.947403+00:00",
+    "access_count": 1
+  }
+]

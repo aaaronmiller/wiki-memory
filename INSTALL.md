@@ -23,9 +23,29 @@
 
 ## Overview
 
-The wiki-memory plugin adds sleep-time compute (dream agent) to your CLI sessions.
+The wiki-memory plugin adds two layers to your CLI sessions:
+
+1. **Atomic memory (hot tier)** — short, recallable facts. Hooks recall them at
+   session start, save explicit "remember…" directives from your prompts, and
+   capture memory-worthy lines from the transcript when a session ends.
+2. **Dream agent (warm tier)** — sleep-time compute that compiles captured
+   knowledge into a persistent wiki and auto-creates skills from repeated patterns.
+
 It captures session knowledge before compaction or shutdown, processes it into
 a persistent wiki, and auto-creates skills from repeated patterns.
+
+### Memory hooks per CLI
+
+| CLI | Recall (start) | Save (prompt) | Capture (end) | Mechanism |
+|-----|----------------|---------------|---------------|-----------|
+| Claude Code | ✅ | ✅ | ✅ | `plugin.json` SessionStart / UserPromptSubmit / SessionEnd |
+| Hermes | ✅ | ✅ | ✅ | `config.yaml` session_start / user_prompt / session_end |
+| Codex | agent-driven (AGENTS.md) | — | ✅ | `notify` program (capture only; no context-injection hook) |
+| Ante / Antigravity | ✅ | ✅ | ✅ | `.antigravity/config.json` hooks |
+
+All hooks call `hooks/memory_hook.py <event>` (Codex uses `hooks/codex_notify.py`)
+and require `python3`. They always exit 0 — a memory hook never blocks a session.
+Store lives at `~/.local/share/ai-wiki/.meta/memory.json` (override `MEMORY_DB`).
 
 **Design philosophy:**
 - The dream agent runs **asynchronously** — it never blocks your session

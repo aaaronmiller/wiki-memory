@@ -3,6 +3,13 @@
 ## [Unreleased]
 
 ### Added
+- **Atomic memory system** (`memory/mem.py`) — the hot tier complementing the dream agent's warm wiki tier. Self-contained, dependency-free engine: `save`, `recall` (keyword + recency + pin scoring), `inject`, `list`, `forget`, `capture`, `stats`. JSON-backed (backward-compatible with the legacy `ante-memory.db` shape), with best-effort ClawMem mirroring (primary store / local fallback, mirroring the dream agent's strategy)
+- **Unified memory hook dispatcher** (`hooks/memory_hook.py`) — one entry point, three events (`session-start` → recall/inject, `user-prompt` → save explicit "remember…" directives + surface relevant memories, `session-end` → capture memory-worthy lines from the transcript). Always exits 0 so a memory hook never blocks a session
+- **Codex notify adapter** (`hooks/codex_notify.py`) — maps Codex's `agent-turn-complete` notify event to memory capture
+- Memory hooks wired into 4 CLIs: Claude Code (`plugin.json` SessionStart/UserPromptSubmit/SessionEnd), Hermes (`config.yaml` lifecycle hooks), Codex (`notify` capture + AGENTS.md recall + aliases), Ante/Antigravity (`config.json` hooks)
+- `tests/test_memory.py` — 19 tests covering the engine, dispatcher, Codex adapter, legacy-format migration, and installer wiring
+
+
 - `config.schema.yaml` — comprehensive configuration schema (wiki, ClawMem, MemVid, dream agent, intent router, classifier, LLM backend, rerank, MCP, all 7 agents, 4 presets)
 - `setup.sh` — 8-phase multi-agent installer (wiki data dir, symlinks, ClawMem, MCP registration, skills, hooks, dream scheduler, env vars). Detects: Pi, Claude Code, Ante, KiloCode, OpenCode, Hermes, Antigravity
 - `specs/requirements.md` — 6 narrative user stories, 37+ FR, 14 AC, glossary

@@ -39,6 +39,37 @@ knowledge base features, or when session hooks trigger the dream cycle.
 
 ---
 
+## Atomic Memory (Hot Tier)
+
+Alongside the dream agent's *warm* wiki pages, the system has a *hot* atomic
+memory layer for short, recallable facts captured the moment they happen.
+
+| Component | Path | Purpose |
+|-----------|------|---------|
+| Memory engine | `memory/mem.py` | save / recall / inject / capture / forget / stats |
+| Hook dispatcher | `hooks/memory_hook.py` | `session-start`, `user-prompt`, `session-end` |
+| Codex adapter | `hooks/codex_notify.py` | maps Codex `notify` → capture |
+| Store | `~/.local/share/ai-wiki/.meta/memory.json` | JSON (override with `MEMORY_DB`) |
+
+**Lifecycle (all CLIs, via hooks):**
+- **session-start** → recall recent/pinned memories, inject as `<memory>` context
+- **user-prompt** → save explicit "remember…" directives (pinned) + surface memories relevant to the prompt
+- **session-end** → scan the transcript for memory-worthy lines and store them
+
+**Manual use:**
+```bash
+python3 memory/mem.py save "fact" --tags a,b --project myproj --pin
+python3 memory/mem.py recall "what did the user prefer" --limit 6
+python3 memory/mem.py inject --project myproj      # context block for injection
+python3 memory/mem.py capture <transcript-path> --source codex
+```
+
+Scoring = keyword overlap × 2 + recency (30-day decay) × 0.5 + pin boost × 1.5.
+Backend mirrors the dream agent: ClawMem when reachable, local JSON always.
+Set `CLAWMEM_ENABLED=0` to disable the ClawMem mirror entirely.
+
+---
+
 ## Dream Feature Management
 
 The dream agent is the core of the wiki-memory system. It runs asynchronously
