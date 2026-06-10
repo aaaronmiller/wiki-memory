@@ -97,7 +97,11 @@ def handle_session_start(payload: dict, store: "mem.MemoryStore"):
 
 def handle_user_prompt(payload: dict, store: "mem.MemoryStore"):
     project = _project_for(payload)
-    prompt = payload.get("prompt") or payload.get("input") or ""
+    prompt = (payload.get("prompt")
+              or payload.get("input")
+              or payload.get("user_message")
+              or payload.get("extra", {}).get("user_message")
+              or "")
     parts = []
 
     # 1. Explicit "remember …" directive → save immediately.
