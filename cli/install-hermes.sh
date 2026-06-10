@@ -1,42 +1,41 @@
 #!/usr/bin/env bash
-# Install wiki-memory plugin (atomic memory + dream agent) for Hermes Agent
+# Install wiki-memory plugin (atomic memory + dream agent) for Hermes Agent v0.16+
 set -euo pipefail
+
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-HERMES_DIR="$HOME/.config/hermes"
+HERMES_HOOKS_DIR="$HOME/.hermes/agent-hooks"
+HERMES_CONFIG="$HOME/.hermes/config.yaml"
 
-mkdir -p "$HERMES_DIR/skills"
-ln -sf "$PLUGIN_DIR/skill/SKILL.md" "$HERMES_DIR/skills/karpathy-wiki.md"
-echo "✓ Hermes skill installed."
+mkdir -p "$HERMES_HOOKS_DIR"
 
-# Stable symlinks so config paths don't depend on the checkout location.
-ln -sfn "$PLUGIN_DIR/hooks" "$HERMES_DIR/wiki-memory-hooks"
-ln -sfn "$PLUGIN_DIR/memory" "$HERMES_DIR/wiki-memory-engine"
+# Install hook scripts
+cp "$PLUGIN_DIR/cli/hermes-pre-llm.py" "$HERMES_HOOKS_DIR/wiki-memory-pre-llm.py"
+cp "$PLUGIN_DIR/cli/hermes-session-end.py" "$HERMES_HOOKS_DIR/wiki-memory-session-end.py"
+chmod +x "$HERMES_HOOKS_DIR/wiki-memory-pre-llm.py" "$HERMES_HOOKS_DIR/wiki-memory-session-end.py"
+echo "✓ Hermes hook scripts installed."
 
-CONFIG="$HERMES_DIR/config.yaml"
+# Add hooks + skill config to hermes config.yaml
 read -r -d '' HOOKS_BLOCK <<EOF || true
-env:
-  WIKI_MEMORY_ROOT: "$PLUGIN_DIR"
-  MEMORY_SOURCE: hermes
 
+# ─── Wiki-Memory Integration ───────────────────────────────────
 hooks:
-  # Atomic memory (hot tier)
-  session_start: python3 $PLUGIN_DIR/hooks/memory_hook.py session-start
-  user_prompt:   python3 $PLUGIN_DIR/hooks/memory_hook.py user-prompt
-  session_end:   python3 $PLUGIN_DIR/hooks/memory_hook.py session-end
-  # Dream agent (warm tier) — captures knowledge before compaction
-  pre_compact:   python3 $PLUGIN_DIR/dream/dream_agent.py --quiet --idle 60
+  pre_llm_call:
+    - command: "python3 ~/.hermes/agent-hooks/wiki-memory-pre-llm.py"
+      timeout: 5
+  on_session_end:
+    - command: "python3 ~/.hermes/agent-hooks/wiki-memory-session-end.py"
+      timeout: 120
+skills:
+  - path: "${PLUGIN_DIR}/skill/SKILL.md"
+hooks_auto_accept: true
+# ─── End wiki-memory ────────────────────────────────────────────
 EOF
 
-if [ ! -f "$CONFIG" ]; then
-    printf '%s\n' "$HOOKS_BLOCK" > "$CONFIG"
-    echo "✓ Wrote $CONFIG with memory + dream hooks"
-elif grep -q "memory_hook.py" "$CONFIG"; then
-    echo "✓ Hooks already present in $CONFIG"
+if ! grep -q "wiki-memory" "$HERMES_CONFIG" 2>/dev/null; then
+    printf '%s\n' "$HOOKS_BLOCK" >> "$HERMES_CONFIG"
+    echo "✓ Added wiki-memory hooks to $HERMES_CONFIG"
 else
-    echo ""
-    echo "⚠ $CONFIG already exists — add these hooks manually to avoid clobbering it:"
-    echo ""
-    printf '%s\n' "$HOOKS_BLOCK"
+    echo "✓ Wiki-memory hooks already present in $HERMES_CONFIG"
 fi
 
-echo "Hooks receive the host hook JSON on stdin and require python3."
+echo "Restart Heremes or run \`hermes hooks list\` to verify."
