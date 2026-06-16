@@ -194,7 +194,7 @@ def test_plugin_json_wires_memory_hooks():
 
 @pytest.mark.parametrize("installer,needle", [
     ("cli/install-claude-code.sh", "memory"),
-    ("cli/install-hermes.sh", "memory_hook.py"),
+    ("cli/install-hermes.sh", "hermes-pre-llm.py"),  # Hermes uses dedicated hook scripts, not memory_hook.py
     ("cli/install-codex.sh", "codex_notify.py"),
     ("cli/install-antigravity.sh", "memory_hook.py"),
 ])
