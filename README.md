@@ -1,5 +1,11 @@
 # 🧠 Karpathy Wiki — Sleep-Time Compute System
 
+<p>
+<img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white">
+<img src="https://img.shields.io/badge/Concept-Karpathy%20Wiki%20Memory-8b5cf6?style=flat-square">
+<img src="https://img.shields.io/badge/Agents-Claude%20%C2%B7%20Codex%20%C2%B7%20Hermes%20%C2%B7%20Pi-0ea5e9?style=flat-square">
+</p>
+
 Persistent, self-improving knowledge base + dream agent + `/goal` loop.
 **Everything lives here.** One directory to install on any machine.
 
