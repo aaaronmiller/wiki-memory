@@ -1011,7 +1011,7 @@ improvement:
 
 ```yaml
 metadata:
-  memvid_join_db: "/home/cheta/code/buttplug/memory/memory.db"
+  memvid_join_db: "~/code/buttplug/memory/memory.db"
   chunk_metadata_schema_version: "1.0.0"
   nightly_integrity_check: true
 ```

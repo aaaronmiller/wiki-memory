@@ -75,7 +75,7 @@ class RealClawMemAdapter(TierAdapter):
 
 - [ ] `npm install -g clawmem`
 - [ ] `clawmem init` (creates vault at ~/.cache/clawmem/index.sqlite)
-- [ ] `clawmem collection add /home/cheta/code/karpathy-wiki/wiki --name wiki`
+- [ ] `clawmem collection add ~/code/karpathy-wiki/wiki --name wiki`
 - [ ] `clawmem update --embed` (initial index + embed)
 - [ ] `clawmem setup hooks` (if using Claude Code)
 - [ ] `clawmem serve --port 7438 &`

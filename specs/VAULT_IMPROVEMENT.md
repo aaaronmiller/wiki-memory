@@ -331,4 +331,4 @@ When it hits optimal score, the agent:
   4. Writes tests
   5. Opens a PR
 User wakes up to "Your CLI tool PRD reached optimal quality.
-  Implemented as /home/cheta/code/awesome-cli/. Review when ready."
+  Implemented as ~/code/awesome-cli/. Review when ready."

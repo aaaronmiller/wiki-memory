@@ -19,7 +19,7 @@ tags: [karpathy-wiki, architecture, clawmem, memvid, sleep-time, tri-tier]
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │                    KARPATHY WIKI (Hottest)                    │
-│  Path: /home/cheta/code/karpathy-wiki/wiki/pages/            │
+│  Path: ~/code/karpathy-wiki/wiki/pages/            │
 │  Format: YAML frontmatter + markdown + [[wikilinks]]          │
 │  Purpose: Human-readable compiled knowledge                   │
 │  Owner: Dream agent writes, human reads/edits                  │

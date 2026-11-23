@@ -37,17 +37,17 @@
 - `dream/scheduler.py` rewritten with systemd timer + daemon + launchd + `--install` modes
 - `skill/SKILL.md` updated to v3.0.0 with directive frontmatter, real paths, multi-agent support
 - `wiki/AGENTS_WIKI.md` updated to v3 with confidence schema, ClawMem provenance, full frontmatter spec
-- **Source of truth moved** from `/home/cheta/code/karpathy-wiki/` → `/home/cheta/code/skills-USER/karpathy-wiki/`
+- **Source of truth moved** from `~/code/karpathy-wiki/` → `~/code/skills-USER/karpathy-wiki/`
 - `ante-spec/modules/karpathy-wiki/` is now a symlink to `skills-USER/karpathy-wiki/`
 - Removed duplicate files from `ante-preview/modules/karpathy-wiki/`
 - All installation logic consolidated from `install.sh` into `setup.sh`
 
 ### Fixed
-- Hardcoded `/home/cheta/git/ClawMem/bin/clawmem` paths in all 8 MCP registration functions → dynamic resolution via `command -v` + `$CLAWMEM_BINARY` fallback
+- Hardcoded `~/git/ClawMem/bin/clawmem` paths in all 8 MCP registration functions → dynamic resolution via `command -v` + `$CLAWMEM_BINARY` fallback
 - AGENTS_WIKI.md source path in `setup.sh` was `../wiki/AGENTS_WIKI.md` (non-existent) → now checks multiple sources + generates default fallback
 - `CANONICAL_DIR` symlink resolution: `pwd` → `pwd -P` so physical path is used
 - systemd `ExecStart` had shell quotes that would produce literal-quote argv on systemd's parser
-- `config.schema.yaml` and `plugin.json` had hardcoded `/home/cheta/` paths → changed to `~/`
+- `config.schema.yaml` and `plugin.json` had hardcoded `~/` paths → changed to `~/`
 - Cleaned up empty scaffolding dirs (`templates/`, `scripts/`, `skills/`)
 
 ### Removed
